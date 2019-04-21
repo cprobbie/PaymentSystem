@@ -2,8 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PaymentSystem.Models;
+using PaymentSystem.Models.Repository;
 
 namespace PaymentSystem
 {
@@ -19,6 +22,8 @@ namespace PaymentSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<PaymentDbContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:PaymentDB"]));
+            services.AddScoped<IPaymentDataRepo<Payment>, PaymentDataRepo>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -26,6 +31,14 @@ namespace PaymentSystem
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(
+            //        builder =>
+            //        {
+            //            builder.WithOrigins("http://localhost:51984");
+            //        });
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +75,8 @@ namespace PaymentSystem
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            //app.UseCors();
         }
     }
 }
