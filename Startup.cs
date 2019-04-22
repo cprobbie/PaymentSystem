@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 using PaymentSystem.Models;
 using PaymentSystem.Models.Repository;
 
@@ -24,7 +25,15 @@ namespace PaymentSystem
         {
             services.AddDbContext<PaymentDbContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:PaymentDB"]));
             services.AddScoped<IPaymentDataRepo<Payment>, PaymentDataRepo>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(opts => 
+                {
+                    var resolver = opts.SerializerSettings.ContractResolver;
+                    if(resolver != null)
+                    {
+                        (resolver as DefaultContractResolver).NamingStrategy = null;
+                    }
+                });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
