@@ -1,0 +1,26 @@
+<form #form="ngForm" autocomplete="off">
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text bg-white">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+      </div>
+      <input name="Amount" #Amount="ngModel" [(ngModel)]="service.Amount" class="form-control" placeholder="Amount">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="input-group">
+      <h4>Payment Type</h4>
+      <mat-form-field>
+        <mat-label>Select Type</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let type of paymentTypes" [value]="type.value">
+            {{type.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <input name="Amount" #Amount="ngModel" [(ngModel)]="service.Amount" class="form-control" placeholder="Amount">
+    </div>
+  </div>
+</form>
