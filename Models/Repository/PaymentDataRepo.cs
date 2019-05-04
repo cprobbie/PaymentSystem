@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PaymentSystem.Models.Repository
 {
@@ -15,7 +16,7 @@ namespace PaymentSystem.Models.Repository
         {
             return _paymentContext.Payments.ToList().OrderByDescending(p => p.CreatedOn);
         }
-        public async void Add(Payment payment)
+        public async Task AddAsync(Payment payment)
         {
             await _paymentContext.Payments.AddAsync(payment);
             await _paymentContext.SaveChangesAsync();

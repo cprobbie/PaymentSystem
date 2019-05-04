@@ -9,7 +9,7 @@ namespace PaymentSystem.Models.Repository
     {
         IEnumerable<TEntity> GetAll();
         TEntity GetById(long id);
-        void Add(TEntity payment);
+        Task AddAsync(TEntity payment);
         void Delete(TEntity payment);
     }
 }

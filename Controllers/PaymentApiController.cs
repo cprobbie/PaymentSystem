@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PaymentSystem.DTOs;
 using PaymentSystem.Models;
 using PaymentSystem.Models.Repository;
 
@@ -34,26 +36,41 @@ namespace PaymentSystem.Controllers
                 return NotFound($"Payment {id} could not be found");
             }
 
-            return Ok();
+            return Ok(payment);
         }
 
         [HttpPost]
-        public IActionResult AddPayment([FromBody] Payment payment)
+        public async Task<IActionResult> AddPayment([FromBody] PaymentDTO payment)
         {
             if (payment == null)
             {
                 return BadRequest("new payment data is required");
             }
 
-            _paymentDataRepo.Add(payment);
-            return CreatedAtRoute(
-                "Get",
-                new { Id = payment.PaymentId },
-                payment);
+            if (payment.Amount < 1)
+            {
+                return BadRequest("minimum payment is $1");
+            }
+            try
+            {
+                var dataModel = new Payment()
+                {
+                    Amount = payment.Amount,
+                    CreatedOn = DateTime.Now,
+                    PaymentType = payment.PaymentType,
+                    ProcessingFees = payment.ProcessingFee,
+                    SettlementAmount = payment.SettlementAmount
+                };
+                await _paymentDataRepo.AddAsync(dataModel);
+            }
+            catch(DbUpdateException ex)
+            {
+                throw new Exception("Error while adding payment", ex);
+            }
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-
         public IActionResult DeletePayment(long id)
         {
             Payment payment = _paymentDataRepo.GetById(id);
@@ -63,7 +80,7 @@ namespace PaymentSystem.Controllers
             }
 
             _paymentDataRepo.Delete(payment);
-            return NoContent();
+            return Ok($"Payment {id} deleted successfully.");
         }
     }
 }
