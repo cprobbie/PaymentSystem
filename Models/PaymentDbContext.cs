@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PaymentSystem.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,14 +24,16 @@ namespace PaymentSystem.Models
                 Amount = 1000m,
                 CreatedOn = DateTime.Now.AddDays(-1),
                 PaymentType = PaymentType.Bronze,
-                SettlementAmount = 1000m - 1.25m
+                SettlementAmount = 1000m - 1.25m,
+                ProcessingFees = 1.25m
             }, new Payment
             {
                 PaymentId = 2,
                 Amount = 678m,
                 CreatedOn = DateTime.Now.AddMonths(-1),
                 PaymentType = PaymentType.Silver,
-                SettlementAmount = (decimal)(678 - 678 * 0.002)
+                SettlementAmount = (decimal)(678 - 678 * 0.002),
+                ProcessingFees = 678 * 0.002m
             });
         }
     }
