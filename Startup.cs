@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using PaymentSystem.Models;
 using PaymentSystem.Models.Repository;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PaymentSystem
 {
@@ -34,6 +35,10 @@ namespace PaymentSystem
                         (resolver as DefaultContractResolver).NamingStrategy = null;
                     }
                 });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Simple Payment API", Version = "v1" });
+            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -64,17 +69,23 @@ namespace PaymentSystem
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpa(spa =>
+            //app.UseSpa(spa =>
+            //{
+            //    // To learn more about options for serving an Angular SPA from ASP.NET Core,
+            //    // see https://go.microsoft.com/fwlink/?linkid=864501
+
+            //    spa.Options.SourcePath = "ClientApp";
+
+            //    if (env.IsDevelopment())
+            //    {
+            //        spa.UseAngularCliServer(npmScript: "start");
+            //    }
+            //});
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Simple Payment API");
             });
         }
     }
