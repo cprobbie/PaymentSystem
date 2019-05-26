@@ -1,3 +1,16 @@
-<p>
-  payment-list works!
-</p>
+<table class="table table-hover">
+  <th>Payment ID</th>
+  <th>Payment Time</th>
+  <th>Type</th>
+  <th>Amount</th>
+  <th>Fees</th>
+  <th>Settlement</th>
+  <tr *ngFor="let p of service.list">
+    <td>{{p.PaymentId}}</td>
+    <td>{{p.CreatedOn | date: 'dd.MM.yyyy HH:MM:SS'}}</td>
+    <td>{{p.PaymentType}}</td>
+    <td>${{p.Amount}}</td>
+    <td>${{p.ProcessingFees}}</td>
+    <td>${{p.SettlementAmount}}</td>
+  </tr>
+</table>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PaymentSystem.DTOs;
 using PaymentSystem.Models;
+using PaymentSystem.Models.Enums;
 using PaymentSystem.Models.Repository;
 
 namespace PaymentSystem.Controllers
@@ -24,7 +25,17 @@ namespace PaymentSystem.Controllers
         public IActionResult ListPayments()
         {
             IEnumerable<Payment> payments = _paymentDataRepo.GetAll();
-            return Ok(payments);
+            var vm = payments.Select(p => new PaymentViewDTO
+            {
+                PaymentId = p.PaymentId,
+                CreatedOn = p.CreatedOn,
+                PaymentType = Enum.GetName(typeof(PaymentType), p.PaymentType),
+                Amount = p.Amount,
+                ProcessingFees = p.ProcessingFees,
+                SettlementAmount = p.SettlementAmount
+            });
+
+            return Ok(vm);
         }
 
         [HttpGet("{id}", Name = "Get")]
@@ -62,12 +73,12 @@ namespace PaymentSystem.Controllers
                     SettlementAmount = payment.SettlementAmount
                 };
                 await _paymentDataRepo.AddAsync(dataModel);
+                return Ok("Payment successfully added");
             }
             catch(DbUpdateException ex)
             {
                 throw new Exception("Error while adding payment", ex);
             }
-            return Ok();
         }
 
         [HttpDelete("{id}")]

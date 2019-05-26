@@ -15,7 +15,7 @@ namespace PaymentSystem.DTOs
                 case PaymentType.Bronze:
                     return 1.25m;
                 case PaymentType.Silver:
-                    return (decimal)((double)Amount * 0.2);
+                    return (decimal)((double)Amount * 0.002);
                 case PaymentType.Gold:
                     return 0;
                 default:
