@@ -4,6 +4,14 @@ using System.Threading.Tasks;
 
 namespace PaymentSystem.Models.Repository
 {
+    public interface IPaymentDataRepo<TEntity>
+    {
+        IEnumerable<TEntity> GetAll();
+        TEntity GetById(long id);
+        Task AddAsync(TEntity payment);
+        void Delete(TEntity payment);
+    }
+
     public class PaymentDataRepo : IPaymentDataRepo<Payment>
     {
         private readonly PaymentDbContext _paymentContext;
